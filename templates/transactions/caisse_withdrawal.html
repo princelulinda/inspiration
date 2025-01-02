@@ -1,0 +1,524 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block head_title %}{{ title }}{% endblock %}
+{% block content %}
+
+<div class="m-auto w-3/4" style="width: 80%; margin: auto;">
+    <br>
+    {% if request.user.is_staff %}
+    <button
+        @click="openModal"
+        id="credit"
+        class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+        Retrait collecteur
+    </button>
+
+    {% endif %}
+
+    {% if request.user.is_superuser %}
+
+    <!-- Modal toggle -->
+    <button
+        type="button" data-modal-toggle="authentication-modal"
+        class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+        Retrait gains
+    </button>
+    {% endif %}
+    <br>
+    <br>
+
+    <div
+        class="relative w-full max-w-xl mr-6 focus-within:text-purple-500">
+        <div class="absolute inset-y-0 flex items-center pl-2">
+            <svg
+                class="w-4 h-4"
+                aria-hidden="true"
+                fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                    fill-rule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clip-rule="evenodd"></path>
+            </svg>
+        </div>
+        <input
+            class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+            type="text"
+            id="search"
+            placeholder="Chercher un compte"
+            aria-label="Search" />
+    </div>
+    {% if transactions %}
+    <div class="w-full overflow-x-auto">
+
+        <h2 class="text-center dark:text-white text-2xl p-3">transaction de retrait de collecteur</h2>
+
+        <table class="w-full whitespace-no-wrap">
+            <thead>
+                <tr
+                    class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                    <th class="px-4 py-3">ID</th>
+                    <th class="px-4 py-3">Montant</th>
+                    <th class="px-4 py-3">Compte</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3">Date</th>
+                    <th class="px-4 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody
+                class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                {% for transaction in transactions %}
+                <tr class="text-gray-700 dark:text-gray-400" id="table">
+                    <td class="px-4 py-3">
+                        <div class="flex items-center text-sm">
+
+                            <div>
+
+                                {{ transaction.id }}
+
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        CDF {{transaction.amount}}
+                    </td>
+
+                    <td class="px-4 py-3 text-sm">
+                        {{transaction.from_account_user_email}}
+                    </td>
+
+                    <td class="px-4 py-3 text-xs">
+                        {% if transaction.status == 'approved' %}
+                        <span
+                            class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                            Approuvée
+                        </span>
+                        {% elif transaction.status == 'pending' %}
+                        <span
+                            class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+                            Encours...
+                        </span>
+                        {% elif transaction.status == 'denied' %}
+                        <span
+                            class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                            Refusée
+                        </span>
+
+                        {% elif transaction.status == 'expired' %}
+                        <span
+                            class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                            Expirée
+                        </span>
+
+                        {% endif %}
+                    </td>
+
+                    <td class="px-4 py-3 text-sm">
+
+                        {{ transaction.timestamp|date:"F d, Y h" }}
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        <!-- button to open the modal pour rembourser la dette -->
+                        Aucune action
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div
+        class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+        {% if transactions.has_other_pages %}
+
+        <div class="flex justify-center ">
+
+            {% if transactions.has_previous %}
+
+            <a href="?page={{ transactions.previous_page_number }}"
+                class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">&laquo;</a>
+
+            {% endif %}
+
+            {% for page_number in transactions.paginator.page_range %}
+
+            {% if transactions.number == page_number %}
+
+            <button
+                class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                <span> {{page_number}} <span class="sr-only"></span></span>
+
+            </button>
+
+            {% else %}
+            <a href="?page={{page_number}}"
+                class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                {{ page_number }}
+            </a>
+
+            {% endif %}
+
+            {% endfor %}
+
+            {% if transactions.has_next %}
+
+            <a href="?page={{ transactions.next_page_number }}"
+                class="btn btn-outline-primary">&laquo;</a>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<div>
+    {% if transactions_cas %}
+    <div class="w-full overflow-x-auto">
+
+        
+        <h2 class="text-center dark:text-white text-2xl p-3">transaction de retrait de gain et de credit</h2>
+        <table class="w-full whitespace-no-wrap">
+            <thead>
+                <tr
+                    class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                    <th class="px-4 py-3">ID</th>
+                    <th class="px-4 py-3">Montant</th>
+                    <th class="px-4 py-3">Effectue par</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3">Date</th>
+                    <th class="px-4 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody
+                class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                {% for transaction in transactions_cas %}
+                <tr class="text-gray-700 dark:text-gray-400" id="table">
+                    <td class="px-4 py-3">
+                        <div class="flex items-center text-sm">
+
+                            <div>
+
+                                {{ transaction.id }}
+
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        CDF {{transaction.amount}}
+                    </td>
+
+                    <td class="px-4 py-3 text-sm">
+                        {{transaction.saved_by}}
+                    </td>
+
+                    <td class="px-4 py-3 text-xs">
+                        {% if transaction.status == 'approved' %}
+                        <span
+                            class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                            Approuvée
+                        </span>
+                        {% elif transaction.status == 'pending' %}
+                        <span
+                            class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+                            Encours...
+                        </span>
+                        {% elif transaction.status == 'denied' %}
+                        <span
+                            class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                            Refusée
+                        </span>
+
+                        {% elif transaction.status == 'expired' %}
+                        <span
+                            class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                            Expirée
+                        </span>
+
+                        {% endif %}
+                    </td>
+
+                    <td class="px-4 py-3 text-sm">
+
+                        {{ transaction.timestamp|date:"F d, Y h" }}
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        <!-- button to open the modal pour rembourser la dette -->
+                        Aucune action
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div
+        class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+        {% if transactions_cas.has_other_pages %}
+
+        <div class="flex justify-center ">
+
+            {% if transactions.has_previous %}
+
+            <a href="?page={{ transactions_cas.previous_page_number }}"
+                class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">&laquo;</a>
+
+            {% endif %}
+
+            {% for page_number in transactions_cas.paginator.page_range %}
+
+            {% if transactions_cas.number == page_number %}
+
+            <button
+                class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                <span> {{page_number}} <span class="sr-only"></span></span>
+
+            </button>
+
+            {% else %}
+            <a href="?page={{page_number}}"
+                class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                {{ page_number }}
+            </a>
+
+            {% endif %}
+
+            {% endfor %}
+
+            {% if transactions_cas.has_next %}
+
+            <a href="?page={{ transactions_cas.next_page_number }}"
+                class="btn btn-outline-primary">&laquo;</a>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Model for collecteur retrait -->
+<div
+    x-show="isModalOpen"
+    x-transition:enter="transition ease-out duration-150"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    class="fixed inset-0 z-30 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center">
+    <!-- Modal -->
+    <div
+        x-show="isModalOpen"
+        x-transition:enter="transition ease-out duration-150"
+        x-transition:enter-start="opacity-0 transform translate-y-1/2"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0  transform translate-y-1/2"
+        @click.away="closeModal"
+        @keydown.escape="closeModal"
+        class="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
+        role="dialog"
+        id="modal">
+        <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+        <header class="flex justify-end">
+            <button
+                class="inline-flex items-center justify-center w-6 h-6 text-gray-400 transition-colors duration-150 rounded dark:hover:text-gray-200 hover: hover:text-gray-700"
+                aria-label="close"
+                @click="closeModal">
+                <svg
+                    class="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    role="img"
+                    aria-hidden="true">
+                    <path
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                        fill-rule="evenodd"></path>
+                </svg>
+            </button>
+        </header>
+        <!-- Modal body -->
+        <div class="mt-4 mb-6">
+            <!-- Modal title -->
+            <h1 class="text-center dark:text-white text-slate-500">
+                Retrait collecteur
+            </h1>
+            <form method="post" class="space-y-6 dark:text-white">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <input type="hidden" name="action" value="retrait_agent">
+                </div>
+                <div class="mb-4">
+                    <label for="email">Adresse email du collecteur:</label>
+                    <input type="email" name="user_agent_email" required
+                        class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                        id="eamil">
+                </div>
+                <div class="mb-4">
+                    <label for="amount">Montant à lui donner: </label>
+                    <input type="number" required step="0.1" min="1"
+                        name="amount"
+                        class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                        id="amount">
+                </div>
+
+                <div class="mb-4">
+                    <label for="amount">Motif: </label>
+                    <input type="text" required name="motif"
+                        class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                        id="amount">
+                </div>
+
+                <div class="flex w-full justify-center">
+                    <button
+                        class="bg-slate-900 text-slate-500 dark:text-white hover:text-blue-900 hover:bg-slate-700 border border-slate-900 font-bold px-4 py-2"
+                        type="submit">
+                        Envoyer
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<!-- component -->
+<link rel="stylesheet"
+    href="https://unpkg.com/@themesberg/flowbite@1.2.0/dist/flowbite.min.css" />
+
+<!-- This is an example component -->
+<div class="max-w-2xl mx-auto">
+
+    <!-- Main modal -->
+    <div id="authentication-modal" aria-hidden="true"
+        class="hidden overflow-x-hidden overflow-y-auto fixed h-modal md:h-full top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center">
+        <div class="relative w-full max-w-md px-4 h-full md:h-auto">
+            <!-- Modal content -->
+            <div class="bg-white rounded-lg shadow relative dark:bg-gray-700">
+                <div class="flex justify-end p-2">
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+                        data-modal-toggle="authentication-modal">
+                        <svg class="w-5 h-5" fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"><path
+                                fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+                <h3
+                    class="text-xl font-medium text-gray-900 dark:text-white">Retrait
+                    gains</h3>
+                <form method="post" class="space-y-6 dark:text-white">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <input type="hidden" name="action"
+                            value="gains">
+                    </div>
+                    <div class="mb-4">
+                        <label for="amount">Montant à lui donner: </label>
+                        <input type="number" required step="0.1" min="1"
+                            name="amount_"
+                            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                            id="amount">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="motif">Motif: </label>
+                        <input type="text" required name="motif_"
+                            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                            id="amount">
+                    </div>
+
+                    <div class="flex w-full justify-center">
+                        <button
+                            class="bg-slate-900 text-slate-500 dark:text-white hover:text-blue-900 hover:bg-slate-700 border border-slate-900 font-bold px-4 py-2"
+                            type="submit">
+                            Envoyer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script
+    src="https://unpkg.com/@themesberg/flowbite@1.2.0/dist/flowbite.bundle.js"></script>
+<style>
+    #hidden{
+        display: none;
+    }
+</style>
+
+<script>
+    // var form = document.getElementById('form')
+    // var ismodified = document.getElementById("ismodified")
+    // var montant = document.getElementById("montant")
+    // var isPaid = document.getElementById("isPaid")
+    // var montantid = document.getElementById("montantid")
+    
+
+    // document.querySelectorAll("input[name='isPaid']").forEach((el) => {
+    //     el.addEventListener("change", function(event) {
+    //         event.preventDefault()
+
+    //         if(event.target.value == "avance") {
+    //             montant.classList.remove("hidden")
+    //             montantid.setAttribute("required", "required")
+    //             montantid.required = true
+
+    //         }else{
+    //             montant.classList.add("hidden")
+    //             montantid.setAttribute("required", "required")
+    //             montantid.required = false
+    //         }
+    //     })
+    // })
+
+
+    // var updateBtns = document.getElementsByClassName("credit")
+    // for (var i = 0; i < updateBtns.length; i++) {
+    //     updateBtns[i].addEventListener('click', function () {
+    //         var productId = this.dataset.credit;
+    //         console.log("CreditId: ", productId)
+    //         ismodified.value = productId
+    //         console.log(ismodified.value)
+    //     })
+    // }
+
+    // form.addEventListener("submit", function(event) {
+    //     event.preventDefault()
+    //     console.log(!isPaid.value, isPaid.value)
+
+    //     if(montant.value == '' && !isPaid.checked) {
+    //         alert('Veuillez remplir le champ de saisie (montant) ou cocher la case (tout payé).');
+    //         return;
+    //     }
+
+    //     form.submit()
+    // })
+    
+
+    // $(document).ready(function () {
+    //     $("#search").on("input", function () {
+    //         var filter = $(this).val().toLowerCase();
+    //         $("#table td").each(function () {
+    //             if ($(this).text().toLowerCase().indexOf(filter) > -1) {
+    //                 $(this).show();
+    //             } else {
+    //                 $(this).hide();
+    //             }
+    //         });
+    //     });
+    // });
+</script>
+{% endblock %}

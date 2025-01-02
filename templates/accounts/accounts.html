@@ -1,0 +1,118 @@
+{% load static %}
+
+<div class="relative w-full max-w-xl mr-6 focus-within:text-purple-500">
+    <div class="absolute inset-y-0 flex items-center pl-2">
+        <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+            <path
+                fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"></path>
+        </svg>
+    </div>
+    <input class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+        type="text" id="search" placeholder="Chercher un compte" aria-label="Search" />
+</div>
+{% if accounts %}
+<div class="w-full overflow-hidden rounded-lg shadow-xs">
+
+    <div class="w-full overflow-x-auto">
+        <table class="w-full whitespace-no-wrap">
+            <thead>
+                <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                    <th class="px-4 py-3">Client</th>
+                    <th class="px-4 py-3">Montant</th>
+                    <th class="px-4 py-3">Phone</th>
+                    <th class="px-4 py-3">Date</th>
+                    <th class="px-4 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" id="table">
+                {% for account in accounts %}
+                <tr class="text-gray-700 dark:text-gray-400">
+                    <td class="px-4 py-3">
+                        <div class="flex items-center text-sm">
+                            <!-- Avatar with inset shadow -->
+                            <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                <img class="object-cover w-full h-full rounded-full" src="{% static 'img/avatar.jpg' %}" alt loading="lazy" />
+                                <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true">
+                                </div>
+                            </div>
+                            <div>
+                                <p class="font-semibold">{{account.name}} {{account.first_name}}
+                                </p>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">
+                                    {{ account.account_no }}, CDF {{account.mise}}
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+                        {{acciunt.account_type.name}} {{account.balance}}
+                    </td>
+                    <td class="px-4 py-3 text-xs">
+                        <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                            {{account.phone}}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm">
+
+                        {{ account.created_at|date:"F d, Y h:i A" }}
+                    </td>
+                    <td class="px-4 py-3 text-sm flex justify-center">
+                        <a class="btn p-2 text-white bg-purple-600" href="{% url 'accounts:account_edit' account.account_no %}">
+                            Edit
+                        </a>
+
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+        {% if transactions.has_other_pages %}
+
+        <div class="flex justify-center ">
+
+            {% if transactions.has_previous %}
+
+            <a href="?page={{ transactions.previous_page_number }}" class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+            &laquo;</a> {% endif %} {% for page_number in transactions.paginator.page_range %} {% if transactions.number == page_number %}
+
+            <button class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                <span> 
+                    {{page_number}} 
+                    <span class="sr-only">
+
+                    </span>
+                </span>
+
+            </button> {% else %}
+            <a href="?page={{page_number}}" class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                {{ page_number }}
+            </a> {% endif %} {% endfor %} {% if transactions.has_next %}
+
+            <a href="?page={{ transactions.next_page_number }}" class="btn btn-outline-primary">&laquo;</a> {% endif %}
+
+        </div>
+
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<script>
+    $(document).ready(function() {
+        $("#search").on("input", function() {
+            var filter = $(this).val().toLowerCase();
+            $("#table td").each(function() {
+                if ($(this).text().toLowerCase().indexOf(filter) > -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>

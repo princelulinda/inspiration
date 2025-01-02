@@ -1,0 +1,305 @@
+{% extends 'core/base_1.html' %} {% load static %} {% block content %}
+
+<div class="@container">
+    <div class="layout-content-container flex flex-col flex-1">
+        <section class="relative bg-gray-800 text-white py-20 lg:py-32">
+            <!-- Background Image -->
+            <div class="absolute inset-0 bg-cover bg-center opacity-50" style="background-image: url('https://img.freepik.com/free-photo/workaholic-african-american-businesswoman-analysing-marketing-statistics-paperwork_482257-8162.jpg?t=st=1723242807~exp=1723246407~hmac=b4842d724672a83af3bc5b97e1609a6183a109d568e65c8a59ee7ac014bed760&w=740');"></div>
+
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-black opacity-40"></div>
+
+            <!-- Content -->
+            <div class="relative container mx-auto px-6 lg:px-12 text-center">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                    Découvrez l'Avenir de la Microfinance
+                </h1>
+                <p class="mt-6 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed">
+                    Restez à la pointe avec les dernières tendances, conseils et innovations des experts du secteur.
+                </p>
+                <div class="mt-8">
+                    <a href="#contact" class="inline-block bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-semibold text-lg md:text-xl px-8 py-4 rounded-full shadow-lg transition duration-300 ease-in-out">
+                Commencez
+            </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container mx-auto px-4 py-10">
+            <!-- Titre principal -->
+            <h2 title="Inspiration RDC Equipe" class="text-3xl md:text-4xl font-bold text-center text-yellow-500 mb-8">
+              Notre Équipe
+            </h2>
+          
+            <!-- Grille des membres de l'équipe -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <!-- Carte du membre de l'équipe -->
+              <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <img
+                  src="{% static 'img/paulin.jpg' %}"
+                  alt="CEO & Fondateur: PAULIN MAHESHE"
+                  class="w-32 h-32 mx-auto rounded-full object-cover mb-4"
+                />
+                <h3 title="Paulin Maheshe" class="text-md font-semibold text-gray-800">Paulin Maheshe</h3>
+                <p class="text-gray-500 mb-3">CEO & Fondateur</p>
+                <p class="text-gray-600 text-sm">
+                  Visionnaire et leader passionné, Paulin guide l'entreprise vers de nouveaux horizons.
+                </p>
+              </div>
+          
+              <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <img
+                  src="https://via.placeholder.com/150"
+                  alt="Membre de l'équipe"
+                  class="w-32 h-32 mx-auto rounded-full object-cover mb-4"
+                />
+                <h3 class="text-xl font-semibold text-gray-800">Sophie Martin</h3>
+                <p class="text-gray-500 mb-3">Directrice Marketing</p>
+                <p class="text-gray-600 text-sm">
+                  Spécialiste du branding et des stratégies, Sophie dynamise notre présence.
+                </p>
+              </div>
+          
+              <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <img
+                  src="{% static 'img/Rodrigue.jpg' %}"
+                  alt="Responsable Technique: Rodrigue Iragi"
+                  class="w-32 h-32 mx-auto rounded-full object-cover mb-4"
+                />
+                <h3 title="Rodrigue Iragi" class="text-xl font-semibold text-gray-800">Rodrigue Iragi</h3>
+                <p class="text-gray-500 mb-3">Responsable Technique</p>
+                <p class="text-gray-600 text-sm">
+                  Expert technique, Rodrigue assure l'innovation et la performance des systèmes.
+                </p>
+              </div>
+            </div>
+          </section>
+          
+          <section class="container mx-auto px-4 py-10">
+
+          <h2 title="Inspiration Rdc Articles finances" class="text-xl md:text-4xl font-bold text-center text-yellow-500 mb-8">
+            Nos dernières mis en jour.
+          </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mx-auto max-w-7xl px-4 mt-5">
+            {% if articles %} {% for article in articles %}
+            <a href="{% url 'article-details' article.slug %}" class="flex flex-col gap-4 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                <img alt="{{article.title}}" src="{{ article.imageUrl }}" class="w-full bg-center bg-no-repeat aspect-video bg-cover" />
+                <div class="p-4">
+                    <p class="text-slate-800 text-lg font-semibold leading-snug">
+                        {{article.title}}
+                    </p>
+                    <p class="text-[#3F5374] text-sm leading-relaxed mt-2">
+                        {{article.content|safe|truncatewords:10}}
+                    </p>
+                </div>
+            </a>
+            {% endfor %} {% endif %}
+        </div>
+
+    </section>
+
+
+    </div>
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col justify-end gap-6 py-10 md:gap-8 md:px-10 md:py-20">
+            <div class="flex flex-col gap-2 text-center mx-auto">
+                <h1 class="text-slate-800 text-2xl sm:text-3xl md:text-4xl font-bold leading-tight tracking-tight max-w-3xl mx-auto">
+                    Recevez nos derniers conseils directement dans votre boîte mail
+                </h1>
+                <p class="text-slate-800 text-base md:text-lg leading-normal max-w-3xl mx-auto">
+                    Abonnez-vous à notre newsletter pour ne manquer aucune de nos exclusivités et mises à jour.
+                </p>
+            </div>
+            <div class="flex justify-center">
+                <label class="flex flex-col w-full max-w-lg">
+                <form id="form" class="flex items-stretch rounded-xl h-14 md:h-16">
+                    <input
+                        placeholder="Entrez votre email"
+                        type="email"
+                        name="email"
+                        id="email"
+                        required
+                        class="form-input flex-1 rounded-l-xl text-slate-800 focus:outline-none bg-[#E4E9F1] placeholder:text-[#3F5374] px-4 text-sm md:text-base"
+                    />
+                    <button
+                        type="submit"
+                        class="flex items-center justify-center bg-[#F4C753] text-slate-800 text-sm md:text-base font-bold px-5 rounded-r-xl h-full">
+                        S'abonner
+                    </button>
+                </form>
+            </label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container mx-auto px-4 py-6" id="services">
+        <h2 class="text-slate-800 text-2xl font-bold leading-tight tracking-tight text-center pb-3">Nos Services</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <!-- Service 1 -->
+            <div class="flex flex-col gap-3 p-4 border border-[#D4DBE8] bg-[#F8F9FB] rounded-lg">
+                <div class="text-slate-800">
+                    <!-- Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M232,168h-8V72a24,24,0,0,0-24-24H56A24,24,0,0,0,32,72v96H24a8,8,0,0,0-8,8v16a24,24,0,0,0,24,24H216a24,24,0,0,0,24-24V176A8,8,0,0,0,232,168ZM48,72a8,8,0,0,1,8-8H200a8,8,0,0,1,8,8v96H48ZM224,192a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8v-8H224ZM152,88a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h32A8,8,0,0,1,152,88Z"></path>
+                </svg>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <h2 class="text-slate-800 text-base font-bold leading-tight">Microcrédits</h2>
+                    <p class="text-[#3F5374] text-sm leading-normal">Accédez à des prêts de petite taille pour soutenir les entrepreneurs et les petites entreprises.</p>
+                </div>
+            </div>
+            <!-- Service 2 -->
+            <div class="flex flex-col gap-3 p-4 border border-[#D4DBE8] bg-[#F8F9FB] rounded-lg">
+                <div class="text-slate-800">
+                    <!-- Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M176,16H80A24,24,0,0,0,56,40V216a24,24,0,0,0,24,24h96a24,24,0,0,0,24-24V40A24,24,0,0,0,176,16ZM72,64H184V192H72Zm8-32h96a8,8,0,0,1,8,8v8H72V40A8,8,0,0,1,80,32Zm96,192H80a8,8,0,0,1-8-8v-8H184v8A8,8,0,0,1,176,224Z"></path>
+                </svg>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <h2 class="text-slate-800 text-base font-bold leading-tight">Conseil Financier</h2>
+                    <p class="text-[#3F5374] text-sm leading-normal">Conseils professionnels pour gérer vos finances et optimiser vos investissements.</p>
+                </div>
+            </div>
+            <!-- Service 3 -->
+            <div class="flex flex-col gap-3 p-4 border border-[#D4DBE8] bg-[#F8F9FB] rounded-lg">
+                <div class="text-slate-800">
+                    <!-- Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89Zm13,93.71A15.89,15.89,0,0,1,198.21,160H152a32,32,0,0,0-32,32,16,16,0,0,1-21.31,15.07C62.49,194.3,40,164,40,128a88,88,0,0,1,87.09-88h.9a88.35,88.35,0,0,1,88,87.25A88.86,88.86,0,0,1,213.81,147.6ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z"></path>
+                </svg>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <h2 class="text-slate-800 text-base font-bold leading-tight">Planification des Investissements</h2>
+                    <p class="text-[#3F5374] text-sm leading-normal">Planification stratégique pour les investissements personnels et professionnels.</p>
+                </div>
+            </div>
+            <!-- Service 4 -->
+            <div class="flex flex-col gap-3 p-4 border border-[#D4DBE8] bg-[#F8F9FB] rounded-lg">
+                <div class="text-slate-800">
+                    <!-- Icon SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M201.89,54.66A103.43,103.43,0,0,0,128.79,24H128A104,104,0,0,0,24,128v56a24,24,0,0,0,24,24H64a24,24,0,0,0,24-24V144a24,24,0,0,0-24-24H40.36A88.12,88.12,0,0,1,190.54,65.93,87.39,0,0,1,215.65,120H192a24,24,0,0,0-24,24v40a24,24,0,0,0,24,24h24a24,24,0,0,1-24,24H136a8,8,0,0,0,0,16h56a40,40,0,0,0,40-40V128A103.41,103.41,0,0,0,201.89,54.66ZM64,136a8,8,0,0,1,8,8v40a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V136Zm128,56a8,8,0,0,1-8-8V144a8,8,0,0,1,8-8h24v56Z"></path>
+                </svg>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <h2 class="text-slate-800 text-base font-bold leading-tight">Gestion des Prêts</h2>
+                    <p class="text-[#3F5374] text-sm leading-normal">Gestion efficace et structuration des prêts pour une croissance optimale.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container mx-auto px-4 py-6">
+        <h2 class="text-slate-800 text-[22px] font-bold leading-tight tracking-tight text-center pb-3">Nos Réalisations</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
+            <!-- Réalisation 1 -->
+            <div class="flex flex-col gap-2 p-6 border border-[#D4DBE8] rounded-xl text-center">
+                <p class="text-slate-800 text-base font-medium leading-normal">Prêts Accordés</p>
+                <p class="text-slate-800 tracking-light text-2xl font-bold leading-tight">300+</p>
+            </div>
+            <!-- Réalisation 2 -->
+            <div class="flex flex-col gap-2 p-6 border border-[#D4DBE8] rounded-xl text-center">
+                <p class="text-slate-800 text-base font-medium leading-normal">Clients Satisfaits</p>
+                <p class="text-slate-800 tracking-light text-2xl font-bold leading-tight">500+</p>
+            </div>
+            <!-- Réalisation 3 -->
+            <div class="flex flex-col gap-2 p-6 border border-[#D4DBE8] rounded-xl text-center">
+                <p class="text-slate-800 text-base font-medium leading-normal">Récompenses Obtenues</p>
+                <p class="text-slate-800 tracking-light text-2xl font-bold leading-tight">20</p>
+            </div>
+            <!-- Réalisation 4 -->
+            <div class="flex flex-col gap-2 p-6 border border-[#D4DBE8] rounded-xl text-center">
+                <p class="text-slate-800 text-base font-medium leading-normal">Années d'Expérience</p>
+                <p class="text-slate-800 tracking-light text-2xl font-bold leading-tight">12</p>
+            </div>
+        </div>
+    </div>
+
+
+    <section class="relative bg-gray-800 text-white py-20 lg:py-32" id="contact">
+        <!-- Background Image -->
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://media.istockphoto.com/id/1313264835/photo/young-confident-successful-business-people-discuss-and-analyze-work-statistics-plans-startup.jpg?s=612x612&w=0&k=20&c=DYw1ZIRfV5rxKGUoDh7IZ13qeMy7u7ijbjnHTrBOO3c='); background-attachment: fixed; opacity: 0.5;"></div>
+
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+
+        <!-- Content -->
+        <div class="relative container mx-auto px-4 py-6 lg:px-12 text-center bg-slate-100 bg-opacity-30 rounded-xl shadow-lg">
+            <h2 class="text-slate-800 text-[22px] font-bold leading-tight tracking-tight text-center pb-3">Contactez-nous</h2>
+
+            <form class="max-w-[480px] mx-auto px-4 py-3 flex flex-col gap-4">
+                <!-- Champ Nom Complet -->
+                <label class="flex flex-col w-full">
+                <span class="text-slate-800 text-sm font-extrabold">Nom Complet</span>
+                <input
+                    type="text"
+                    placeholder="Votre Nom Complet"
+                    class="form-input w-full rounded-xl text-slate-800 focus:outline-0 focus:ring-0 border border-[#D4DBE8] bg-[#F8F9FB] focus:border-[#D4DBE8] placeholder:text-[#3F5374] p-4 text-base font-normal leading-normal"
+                />
+            </label>
+
+                <!-- Champ Email -->
+                <label class="flex flex-col w-full">
+                <span class="text-slate-800 text-sm font-extrabold">Email</span>
+                <input
+                    type="email"
+                    placeholder="Votre Email"
+                    class="form-input w-full rounded-xl text-slate-800 focus:outline-0 focus:ring-0 border border-[#D4DBE8] bg-[#F8F9FB] focus:border-[#D4DBE8] placeholder:text-[#3F5374] p-4 text-base font-normal leading-normal"
+                />
+            </label>
+
+                <!-- Champ Message -->
+                <label class="flex flex-col w-full">
+                <span class="text-slate-800 text-sm font-extrabold">Message</span>
+                <textarea
+                    placeholder="Votre Message"
+                    class="form-input w-full min-h-[100px] resize-none overflow-hidden rounded-xl text-slate-800 focus:outline-0 focus:ring-0 border border-[#D4DBE8] bg-[#F8F9FB] focus:border-[#D4DBE8] placeholder:text-[#3F5374] p-4 text-base font-normal leading-normal"
+                ></textarea>
+            </label>
+
+                <!-- Bouton Envoyer -->
+                <div class="flex justify-center pt-4">
+                    <button type="submit" class="flex w-full max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-[#F4C753] text-slate-800 text-base font-bold leading-normal tracking-[0.015em]">
+                    <span class="truncate">Envoyer le Message</span>
+                </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+
+
+
+    <div class="container mx-auto px-4 py-6">
+        <h2 class="text-slate-800 text-[22px] font-bold leading-tight tracking-tight text-center pb-3">Mots clés</h2>
+
+        <div class="flex flex-wrap gap-3 justify-center p-3">
+            {% if tags %} {% for tag in tags %}
+            <a href="{% url 'tag-details' tag.slug %}" class="flex h-8 items-center justify-center rounded-xl bg-[#E4E9F1] px-4">
+                <p class="text-slate-800 text-sm font-extrabold">{{ tag.name }}</p>
+            </a>
+            {% endfor %} {% endif %}
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+
+    document.getElementById("form").addEventListener("submit", (e) => {
+        e.preventDefault()
+        let email = document.getElementById("email").value;
+        if(!email) return alert("Champ email vide !")
+        else{
+            alert("Suscribition recu !")
+            window.location.reload()
+        }
+    })
+    
+</script>
+
+{% endblock %}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votre Code OTP, LiPaX</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background-color: #ecf1f0;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+        
+        h1 {
+            color: #040b11;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        p {
+            margin-top: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .otp {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #340404;
+            color: #fff;
+            font-size: 24px;
+            border-radius: 5px;
+        }
+        
+        .note {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo img {
+            max-width: 150px;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #b9063f;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{title}}</h1>
+            <div class="logo">
+                <img src="../../static/assets/img/loginIm/logo.png" alt="Logo de votre application">
+            </div>
+        </header>
+        <h1>Message de Confirmation</h1>
+        <p>Vous recevez ce message par ce que vous vous etes inscrit à un plan d'utilisation de Shorappro (byams empire sprl)</p>
+        <p></p>
+        
+        <p class="note">
+            <p>Une fois votre plan validé, vous récevrez une réponse sur l'evaluation de votre demande dans un delai</p>
+        </p>
+        <footer>
+            <a href="#">Politique de confidentialité</a>
+            <a href="#">Conditions d'utilisation</a>
+            <a href="#">Assistance</a>
+        </footer>
+    </div>
+</body>
+</html>

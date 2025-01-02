@@ -1,0 +1,127 @@
+{% extends 'core/base_1.html' %} {% block content %}
+<div class="gap-1 px-6 flex flex-1 justify-center py-5">
+  <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+    <p class="text-[#3F5374] text-sm font-normal leading-normal pb-3 pt-1 px-4">Publié le {{article.created_at}} </p>
+
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
+      <div class="flex flex-col gap-3 pb-3 bg-white rounded-xl shadow-md">
+        <!-- Conteneur Flex pour s'assurer que le texte occupe toute la hauteur disponible -->
+        <div class="flex flex-col h-full">
+          <!-- Image -->
+          <img src="{{ article.imageUrl }}" class="w-full bg-center bg-no-repeat bg-cover rounded-t-xl aspect-video"
+            style='background-image: url("");' alt="{{ article.title }}" />
+          <!-- Texte -->
+          <div class="p-4 flex flex-col justify-between flex-grow">
+            <p class="text-[#141C24] text-lg font-semibold leading-snug">
+              {{ article.title }}
+            </p>
+            <p class="text-[#3F5374] text-sm leading-relaxed mt-2">
+              {{ article.content|safe }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pb-3">
+
+    </div>
+
+    <h1 class="text-[#141C24] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5">Related
+      Articles</h1>
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
+      {% if articles %} {% for article in articles %}
+      <a href="{% url 'article-details' article.slug %}"
+        class="flex flex-col gap-4 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+        <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+          style='background-image: url("{{ article.image.url }}") '></div>
+        <div class="p-4">
+          <p class="text-slate-800 text-lg font-semibold leading-snug">
+            {{article.title}}
+          </p>
+          <p class="text-[#3F5374] text-sm leading-relaxed mt-2">
+            {{article.content|safe|truncatewords:10}}
+          </p>
+        </div>
+      </a>
+      {% endfor %} {% endif %}
+
+    </div>
+    <div class="flex flex-col gap-8 overflow-x-hidden bg-[#F8F9FB] p-4">
+      {% for comment in comments %}
+
+      <div class="flex flex-col gap-3 bg-[#F8F9FB]">
+        <div class="flex items-center gap-3">
+          <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+            style='background-image: url("https://www.refugee-action.org.uk/wp-content/uploads/2016/10/anonymous-user.png");'>
+          </div>
+          <div class="flex-1">
+            <p class="text-[#141C24] text-base font-medium leading-normal">{{ comment.author }}</p>
+            <p class="text-[#3F5374] text-sm font-normal leading-normal">{{ comment.created_at|date:"d M Y H:i" }}</p>
+          </div>
+        </div>
+        <p class="text-[#141C24] text-base font-normal leading-normal">
+          {{ comment.content }}
+        </p>
+        <div class="flex gap-9 text-[#3F5374]">
+          <form action="{% url 'like-comment' comment.id %}" method="post">
+            {% csrf_token %}
+            <button class="flex items-center gap-2" type="submit">
+              <div class="text-inherit" data-icon="ThumbsUp" data-size="20px" data-weight="regular">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor"
+                  viewBox="0 0 256 256">
+                  <path
+                    d="M234,80.12A24,24,0,0,0,216,72H160V56a40,40,0,0,0-40-40,8,8,0,0,0-7.16,4.42L75.06,96H32a16,16,0,0,0-16,16v88a16,16,0,0,0,16,16H204a24,24,0,0,0,23.82-21l12-96A24,24,0,0,0,234,80.12ZM32,112H72v88H32ZM223.94,97l-12,96a8,8,0,0,1-7.94,7H88V105.89l36.71-73.43A24,24,0,0,1,144,56V80a8,8,0,0,0,8,8h64a8,8,0,0,1,7.94,9Z">
+                  </path>
+                </svg>
+              </div>
+
+              <p class="text-inherit">{{ comment.likes_count }}</p>
+            </button>
+          </form>
+
+          <form action="{% url 'unlike-comment' comment.id %}" method="post">
+            {% csrf_token %}
+
+
+            <button class="flex items-center gap-2" type="submit">
+              <div class="text-inherit" data-icon="ThumbsDown" data-size="20px" data-weight="regular">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor"
+                  viewBox="0 0 256 256">
+                  <path
+                    d="M239.82,157l-12-96A24,24,0,0,0,204,40H32A16,16,0,0,0,16,56v88a16,16,0,0,0,16,16H75.06l37.78,75.58A8,8,0,0,0,120,240a40,40,0,0,0,40-40V184h56a24,24,0,0,0,23.82-27ZM72,144H32V56H72Zm150,21.29a7.88,7.88,0,0,1-6,2.71H152a8,8,0,0,0-8,8v24a24,24,0,0,1-19.29,23.54L88,150.11V56H204a8,8,0,0,1,7.94,7l12,96A7.87,7.87,0,0,1,222,165.29Z">
+                  </path>
+                </svg>
+              </div>
+              <p class="text-inherit">{{ comment.unlikes_count }}</p>
+            </button>
+
+          </form>
+        </div>
+      </div>
+      {% empty %}
+
+      <p>Aucun commentaire pour cet article.</p>
+
+      {% endfor %}
+
+
+    </div>
+    <div class="@container">
+      <div class="flex flex-col justify-end gap-6 px-4 py-10 @[480px]:gap-8 @[480px]:px-10 @[480px]:py-20">
+        <div class="flex flex-col gap-2">
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <!-- Bouton de soumission -->
+          <button type="submit" class="px-6 py-2 bg-yellow-700 text-white rounded-md hover:bg-yellow-600 focus:ring-2 focus:ring-yellow-500 focus:outline-none">
+            Soumettre
+        </button>
+          </form>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+</div>
+  {% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+ 
+{% block content %}
+
+<div class="w-full flex mt-5 justify-center p-4">
+    <div class="text-white w-full">
+        <h1 class="font-mono font-bold text-3xl text-center pb-5 pt-10 px-5">{{ title }}</h1>
+        <p class="text-center bg-gray text-warning"></p>
+        <hr />
+        <form method="post" class="dark:text-white mb-4">
+            {% csrf_token %}
+            <input type="hidden" value="withdrawal" name="transaction_type">
+            <div class="mb-4 p-2">
+            
+                <label class="block dark:text-white text-sm font-bold mb-2" for="amount">
+                    Entrer le numero de compte
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight border rounded-md border-gray-500 focus:outline-none focus:shadow-outline"
+                    name="account_num" id="account_num" type="text" required placeholder="Account number">
+            </div>
+            <div class="mb-4 p-2">
+                <label class="block dark:text-white text-sm font-bold mb-2" for="amount">
+                    Entrer le montant
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight border rounded-md border-gray-500 focus:outline-none focus:shadow-outline"
+                    name="amount" id="amount" min="1" type="number" required placeholder="Amount">
+            
+            </div>
+            
+
+            <div class="mb-4 p-2">
+            
+                <label class="block text-slate-500 text-sm font-bold mb-2" for="mise">
+                    Frais de service
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight border rounded-md border-gray-500 focus:outline-none focus:shadow-outline"
+                    name="mise" id="mise" min="1" id="account_num" type="number" required placeholder="Account number">
+            </div>
+            {% if form.amount.errors %} {% for error in form.amount.errors %}
+            <p class="text-red-600 text-sm italic pb-2">{{ error }}</p>
+            {% endfor %} {% endif %}
+
+            {% if message %}
+            <p class="text-red-600 text-sm italic pb-2">{{ message }}</p>
+             {% endif %}
+
+            <div class="flex w-full justify-center">
+                <button class="bg-blue-900 dark:text-white hover:text-blue-900 hover:bg-white border border-blue-900 font-bold px-4 py-2" type="submit">
+                Envoyer
+            </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

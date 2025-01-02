@@ -1,0 +1,253 @@
+{% extends 'core/base.html' %}
+{% load humanize %}
+{% block head_title %}Transaction Report{% endblock %}
+{% block head_extra %}
+<script type="text/javascript"
+    src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript"
+    src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous">
+{% endblock %}
+
+{% block content %}
+<div class="my-10 py-3 px-4  rounded-xl shadow-md p-4">
+    <h1
+        class="font-mono font-bold text-3xl text-gray-500 pb-5 pt-2 uppercase">Rapport
+        des transactions effectuées</h1>
+
+    <form method="post">
+
+        {% csrf_token %}
+        <input type="hidden" name="action" value="search">
+
+        <div class>
+
+            <div
+                class="relative w-full max-w-xl mr-6 focus-within:text-purple-500">
+                <div class="absolute inset-y-0 flex items-center pl-2 ">
+                    <svg
+                        class="w-4 h-4"
+                        aria-hidden="true"
+                        fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            fill-rule="evenodd"
+                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <input
+                    class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+                    type="text"
+                    name="account"
+                    placeholder="Chercher un compte"
+                    aria-label="Search" />
+            </div>
+            <br>
+
+            <div class="flex items-center pt-4">
+                <label for="datepicker" class="dark:text-white">De </label>
+                <div class="relative">
+                    <div
+                        class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                        </svg>
+                    </div>
+                    <input name="start" type="datetime-local"
+                        class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+                        placeholder="Select date start">
+                </div>
+                <span class="dark:text-white"> à </span>
+                <div class="relative">
+                    <div
+                        class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                        </svg>
+                    </div>
+                    <input name="end" type="datetime-local"
+                        class="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
+                        placeholder="Select date end">
+                </div>
+            </div>
+            <br>
+            <button
+                type="submit"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Confirmer
+            </button>
+
+            <button
+                type="button"
+                class="bg-slate-500 hover:bg-slate-700 dark:text-white font-bold py-2 px-4 rounded">
+                Retrait: CDF {{total_retrait}}
+            </button>
+
+            <button
+                type="button"
+                class="bg-slate-500 hover:bg-slate-700 dark:text-white font-bold py-2 px-4 rounded">
+                Depot: CDF {{total_deposit}}
+            </button>
+
+        </div>
+
+    </form>
+
+    <!-- New Table -->
+    <div class="w-full overflow-hidden rounded-lg shadow-xs p-3">
+        <div class="w-full overflow-x-auto">
+            {% if transactions %}
+            <table class="w-full whitespace-no-wrap">
+                <thead>
+                    <tr
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        <th class="px-4 py-3">#ID_TRANS</th>
+                        <th class="px-4 py-3">MONTANT</th>
+                        <th class="px-4 py-3">TYPE</th>
+                        <th class="px-4 py-3">STATUS</th>
+                        <th class="px-4 py-3">DATE</th>
+                        <th class="px-4 py-3">ACTIONS</th>
+                    </tr>
+                </thead>
+
+                <tbody
+                    class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                    {% for transaction in transactions %}
+
+                    <tr class="text-gray-700 dark:text-gray-400" id="table">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center text-sm">
+                                <div>
+                                    <p
+                                        class="font-semibold">#{{transaction.id}}|
+                                        C: {{transaction.account}}</p>
+
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-sm">
+                            CDF{{ transaction.amount|floatformat:2|intcomma }}
+                        </td>
+
+                        <td class="px-4 py-3 text-sm">
+                            {% if transaction.transaction_type == "withdrawal" %}
+                            Retrait
+                            {% elif transaction.transaction_type == "deposit" %}
+
+                            Depot
+
+                            {% endif %}
+                        </td>
+
+                        <td class="px-4 py-3 text-xs">
+                            {% if transaction.status == 'approved' %}
+                            <span
+                                class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                Approuvée
+                            </span>
+                            {% elif transaction.status == 'pending' %}
+                            <span
+                                class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+                                Encours...
+                            </span>
+                            {% elif transaction.status == 'denied' %}
+                            <span
+                                class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">
+                                Refusée
+                            </span>
+
+                            {% elif transaction.status == 'expired' %}
+                            <span
+                                class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:text-gray-100 dark:bg-gray-700">
+                                Expirée
+                            </span>
+
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-sm">
+                            {{ transaction.timestamp|date:"F d, Y h:i A" }}
+                        </td>
+                        <td class="px-4 py-3 text-sm">
+                            <button class="btn badge">
+
+                            </button>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+                {% else %}
+
+            </table>
+
+            <div class="text-center text-3xl text-gray-500">
+                Pas de transactions effectuées
+            </div>
+
+            {% endif %}
+        </div>
+        <div
+            class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
+            {% if transactions.has_other_pages %}
+
+            <div class="flex justify-center ">
+
+                {% if transactions.has_previous %}
+
+                <a href="?page={{ transactions.previous_page_number }}"
+                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">&laquo;</a>
+
+                {% endif %}
+
+                {% for page_number in transactions.paginator.page_range %}
+
+                {% if transactions.number == page_number %}
+
+                <button
+                    class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
+                    <span> {{page_number}} <span class="sr-only"></span></span>
+
+                </button>
+
+                {% else %}
+                <a href="?page={{page_number}}"
+                    class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
+                    {{ page_number }}
+                </a>
+
+                {% endif %}
+
+                {% endfor %}
+
+                {% if transactions.has_next %}
+
+                <a href="?page={{ transactions.next_page_number }}"
+                    class="btn btn-outline-primary">&laquo;</a>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %} {% block footer_extra %}
+
+{% endblock %}

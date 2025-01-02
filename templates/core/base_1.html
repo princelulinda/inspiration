@@ -1,0 +1,49 @@
+<!DOCTYPE html> {% load static %}
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Ir, IRAGI MAHESHE RODRIGUE">
+    <meta name="author_gmail" content="rodrigueiragi1@gmail.com">
+    <meta name="owner" content="PAULIN MAHESHE">
+    <title>Inspiration RDC - Blogue {{ article.title }} {{ tag_n.name }}</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link rel="stylesheet" as="style" onload="this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700" />
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7333880846224437"
+     crossorigin="anonymous"></script>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        /* Ensure the mobile menu is hidden by default */
+        
+        .mobile-menu {
+            display: none;
+        }
+        /* Display the mobile menu when the menu is toggled */
+        
+        .mobile-menu.active {
+            display: block;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="relative flex size-full min-h-screen flex-col bg-[#F8F9FB] group/design-root overflow-x-hidden" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
+        <div class="layout-container flex h-full grow flex-col">
+            {% include 'widgets/header.html' %} {% block content %} {% endblock %} {% include 'widgets/footer.html' %}
+        </div>
+    </div>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById("mobileMenu");
+            menu.classList.toggle("hidden");
+            menu.classList.toggle("flex");
+        }
+    </script>
+</body>
+
+</html>
