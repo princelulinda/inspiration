@@ -13,8 +13,6 @@ COPY . .
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Collect static lors du build (optionnel)
-RUN python manage.py collectstatic --noinput
 
 # Port exposé par Django
 EXPOSE 8000
