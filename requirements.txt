@@ -26,7 +26,9 @@ sqlparse==0.5.0
 tzdata==2024.1
 vine==5.1.0
 wcwidth==0.2.13
+django-ckeditor==6.5.1
 webencodings==0.5.1
 gunicorn==21.2.0
 PyMySQL==1.1.0
+
 
